@@ -3,16 +3,26 @@ from utils import is_positive_definite, flat_sigma_to_sigma_matrix
 
 def init():
 
-    k_0, k_1, p = 4, 4, 5
-    k = k_0 + k_1 + p
+    # load the data
+    data_dict_try = np.load('../data/data_dict.npy', allow_pickle=True).item()
+    s, w, x, y, z = data_dict_try['s'], data_dict_try['w'], data_dict_try['x'], data_dict_try['y'], data_dict_try['z']
+    n = 500
+    s, w, x, y = s[:n], w[:n], x[:n], y[:n]
+    z[0], z[1] = z[0][:n], z[1][:n]
+
+    # parameters
+    z_mean = np.array([z[1][i] if s[i] else z[0][i] for i in range(len(s))]).mean()
+    beta_0_mean, beta_1_mean = z_mean.mean()/(4*x.mean(axis=0)), z_mean/(4*x.mean(axis=0))
+    gamma_mean = 1/(5*np.mean(w, axis=0))
     
-    beta_0_init = np.zeros(k)
-    B_0 = np.identity(k)
+    beta_0_init = np.concatenate([beta_0_mean, beta_1_mean, gamma_mean])
+    B_0 = np.diag([1] * 4 * 2 + [0]*5)
+
     # sample from multivariate normal distribution
     beta = np.random.multivariate_normal(beta_0_init, B_0)
 
-    g_0 = np.array([1, 1, 1, 1])
-    G_0 = np.identity(g_0.shape[0])
+    g_0 = np.array([0, 0, z_mean, z_mean])
+    G_0 = np.identity(len(g_0))
     
     sigma_flat = np.random.multivariate_normal(g_0, G_0)
     sigma_matrix = flat_sigma_to_sigma_matrix(sigma_flat)
@@ -21,8 +31,4 @@ def init():
         sigma_flat = np.random.multivariate_normal(g_0, G_0)
         sigma_matrix = flat_sigma_to_sigma_matrix(sigma_flat)
     
-    # load the data
-    data_dict_try = np.load('../data/data_dict.npy', allow_pickle=True).item()  
-    s, w, x, y, z = data_dict_try['s'], data_dict_try['w'], data_dict_try['x'], data_dict_try['y'], data_dict_try['z']
-    
-    return beta, sigma_flat, s, w, x, y, z
+    return s, w, x, y, z, sigma_matrix, beta, g_0, G_0, beta_0_init, B_0
