@@ -1,7 +1,8 @@
 import torch
 import math
+import scipy.stats as stats
 
-from utils import is_positive_definite, flat_sigma_to_sigma_matrix
+from utils import is_positive_definite, flat_sigma_to_sigma_matrix, sigma_matrix_to_flat_sigma
 
 def log_likelyhood_ys(w, x, s, z, gamma, beta_0, beta_1, sigma_matrix):
     
