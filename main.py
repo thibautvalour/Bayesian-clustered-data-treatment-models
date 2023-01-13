@@ -32,4 +32,4 @@ def main_gaussian(w, x, s, z, gamma,  sigma_matrix, beta_0,
 
 if __name__ == "__main__":
     new_sigma, new_beta = main_gaussian(w, x, s, z, gamma,  sigma_matrix, beta_0,
-                                        beta_1, g_0, G_0, beta_0_init, B_0, 21)
+                                        beta_1, g_0, G_0, beta_0_init, B_0, 10_000)
