@@ -6,7 +6,7 @@ from utils import is_positive_definite, flat_sigma_to_sigma_matrix
 def init():
 
     # load the data
-    data_dict_try = np.load('../data/data_dict.npy', allow_pickle=True).item()
+    data_dict_try = np.load('data_dict.npy', allow_pickle=True).item()
     s, w, x, y, z = data_dict_try['s'], data_dict_try['w'], data_dict_try['x'], data_dict_try['y'], data_dict_try['z']
     n = 500
     s, w, x, y = s[:n], w[:n], x[:n], y[:n]
